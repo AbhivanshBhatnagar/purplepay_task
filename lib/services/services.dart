@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ens_dart/ens_dart.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +24,39 @@ class Services {
       Fluttertoast.showToast(
           msg: e.toString().substring(
               e.toString().indexOf('"') + 1, e.toString().lastIndexOf('"')));
+    }
+  }
+
+  initNotifications() {
+    AwesomeNotifications().initialize(
+        '',
+        [
+          NotificationChannel(
+            channelGroupKey: 'basic_channel_group',
+            channelKey: 'basic_channel',
+            channelName: 'Basic notifications',
+            channelDescription: 'Notification channel for basic tests',
+            // defaultColor: Color(0xFF9D50DD),
+            // ledColor: Colors.white)
+          )
+        ],
+        channelGroups: [
+          NotificationChannelGroup(
+              channelGroupKey: 'basic_channel_group',
+              channelGroupName: 'Basic group')
+        ],
+        debug: true);
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+    checkNotificationPermission() {
+      AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+        if (!isAllowed) {
+          AwesomeNotifications().requestPermissionToSendNotifications();
+        }
+      });
     }
   }
 
